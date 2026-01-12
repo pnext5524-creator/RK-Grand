@@ -1,0 +1,8 @@
+{
+  "name": "Copy of RK-GRAND Enterprise Ecosystem",
+  "description": "A comprehensive enterprise management platform for the RK-GRAND pulp mill, featuring HR management, engineering project tracking with AI-driven contractor analytics, and time-tracking with PDF exports.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
