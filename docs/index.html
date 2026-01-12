@@ -3,237 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>РК-ГРАНД Экосистема</title>
+    <title>РК-ГРАНД</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    <script>
-      const theme = localStorage.getItem('theme') || 'light';
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-      }
-      
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
-            animation: {
-              'pulse-slow': 'pulse-custom 12s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              'mesh-blob': 'mesh-movement 20s ease-in-out infinite',
-            },
-            keyframes: {
-              'pulse-custom': {
-                '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },
-                '50%': { opacity: 0.6, transform: 'scale(1.1)' },
-              },
-              'mesh-movement': {
-                '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
-                '33%': { transform: 'translate(10%, -10%) scale(1.2)' },
-                '66%': { transform: 'translate(-5%, 15%) scale(0.9)' },
-              }
-            }
-          }
-        }
-      }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s ease, color 0.3s ease; }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .dark .glass-panel {
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .dark ::-webkit-scrollbar { width: 8px; }
-        .dark ::-webkit-scrollbar-track { background: #0f172a; }
-        .dark ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-        .dark ::-webkit-scrollbar-thumb:hover { background: #334155; }
-        
-        .mesh-gradient-bg {
-          background-color: #0f172a;
-          background-image: 
-            radial-gradient(at 0% 0%, hsla(222,47%,11%,1) 0, transparent 50%), 
-            radial-gradient(at 50% 0%, hsla(217,91%,60%,0.15) 0, transparent 50%), 
-            radial-gradient(at 100% 0%, hsla(222,47%,11%,1) 0, transparent 50%), 
-            radial-gradient(at 0% 50%, hsla(217,91%,60%,0.1) 0, transparent 50%), 
-            radial-gradient(at 100% 50%, hsla(250,91%,60%,0.1) 0, transparent 50%), 
-            radial-gradient(at 0% 100%, hsla(222,47%,11%,1) 0, transparent 50%), 
-            radial-gradient(at 50% 100%, hsla(217,91%,60%,0.15) 0, transparent 50%), 
-            radial-gradient(at 100% 100%, hsla(222,47%,11%,1) 0, transparent 50%);
-        }
-    </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
-    <div id="root"></div>
-    
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-        const { createRoot } = ReactDOM;
-        const { User, Settings, BarChart3, Users, Clock, CheckSquare, MessageCircle, Sun, Moon, Menu, Bell } = lucide;
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <!-- Debug: Page loaded successfully -->
+    <script>console.log('RK-GRAND page loaded at:', new Date());</script>
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <h1 class="text-2xl font-bold text-center mb-6">РК-ГРАНД</h1>
+        <p class="text-gray-600 text-center mb-8">Корпоративная экосистема</p>
+        
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Логин</label>
+                <input type="text" id="login" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Введите логин" required>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
+                <input type="password" id="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Введите пароль" required>
+            </div>
+            
+            <div id="error" class="text-red-500 text-sm text-center hidden"></div>
+            
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
+                Войти
+            </button>
+        </form>
+        
+        <div class="mt-6 text-center text-sm text-gray-500">
+            <p>Тестовые аккаунты:</p>
+            <p>admin/123, director/123</p>
+        </div>
+    </div>
 
-        // Простая версия приложения для GitHub Pages
-        const App = () => {
-            const [theme, setTheme] = useState(() => 
-                localStorage.getItem('theme') || 'light'
-            );
-            const [isLoggedIn, setIsLoggedIn] = useState(false);
-            const [currentUser, setCurrentUser] = useState(null);
+    <div id="dashboard" class="hidden w-full max-w-4xl mx-auto p-6">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold">РК-ГРАНД Dashboard</h1>
+                <button id="logoutBtn" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Выйти</button>
+            </div>
+            <p id="welcomeText" class="text-gray-600 mt-2"></p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-2">Сотрудники</h3>
+                <p class="text-gray-600">Управление персоналом</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-2">Аналитика</h3>
+                <p class="text-gray-600">Отчеты и статистика</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-2">Задачи</h3>
+                <p class="text-gray-600">Управление проектами</p>
+            </div>
+        </div>
+    </div>
 
-            useEffect(() => {
-                if (theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-                localStorage.setItem('theme', theme);
-            }, [theme]);
+    <script>
+        const users = {
+            'admin': { name: 'Администратор', role: 'admin' },
+            'director': { name: 'Малышев Константин Сергеевич', role: 'director' },
+            'engineer': { name: 'Волков Сергей Александрович', role: 'engineer' }
+        };
 
-            const toggleTheme = () => {
-                setTheme(prev => prev === 'light' ? 'dark' : 'light');
-            };
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const login = document.getElementById('login').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error');
 
-            const handleLogin = (login, password) => {
-                // Простая проверка логина
-                const users = {
-                    'admin': { name: 'Администратор', role: 'admin' },
-                    'director': { name: 'Малышев Константин Сергеевич', role: 'director' },
-                    'zam': { name: 'Морозов Артем Викторович', role: 'manager' },
-                    'engineer': { name: 'Волков Сергей Александрович', role: 'engineer' },
-                    'energy': { name: 'Зайцев Николай Михайлович', role: 'engineer' },
-                    'accountant': { name: 'Лебедева Елена Николаевна', role: 'accountant' }
-                };
-
-                if (users[login] && password === '123') {
-                    setCurrentUser({ login, ...users[login] });
-                    setIsLoggedIn(true);
-                    return true;
-                }
-                return false;
-            };
-
-            if (!isLoggedIn) {
-                return React.createElement(LoginPage, { onLogin: handleLogin, theme: theme, toggleTheme: toggleTheme });
+            if (users[login] && password === '123') {
+                document.querySelector('.bg-gray-100').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('welcomeText').textContent = `Добро пожаловать, ${users[login].name}!`;
+                errorDiv.classList.add('hidden');
+            } else {
+                errorDiv.textContent = 'Неверный логин или пароль';
+                errorDiv.classList.remove('hidden');
             }
+        });
 
-            return React.createElement(Dashboard, { user: currentUser, theme: theme, toggleTheme: toggleTheme, onLogout: () => setIsLoggedIn(false) });
-        };
-
-        const LoginPage = ({ onLogin, theme, toggleTheme }) => {
-            const [login, setLogin] = useState('');
-            const [password, setPassword] = useState('');
-            const [error, setError] = useState('');
-
-            const handleSubmit = (e) => {
-                e.preventDefault();
-                if (onLogin(login, password)) {
-                    setError('');
-                } else {
-                    setError('Неверный логин или пароль');
-                }
-            };
-
-            return React.createElement('div', { className: "min-h-screen mesh-gradient-bg flex items-center justify-center p-4" },
-                React.createElement('div', { className: "absolute top-6 right-6" },
-                    React.createElement('button', {
-                        onClick: toggleTheme,
-                        className: "p-3 text-white/70 hover:text-white hover:bg-white/10 rounded-2xl transition-all"
-                    }, theme === 'light' ? React.createElement(Moon, { size: 24 }) : React.createElement(Sun, { size: 24 }))
-                ),
-                React.createElement('div', { className: "glass-panel rounded-3xl p-8 w-full max-w-md" },
-                    React.createElement('div', { className: "text-center mb-8" },
-                        React.createElement('h1', { className: "text-3xl font-black text-slate-900 dark:text-white mb-2" }, "РК-ГРАНД"),
-                        React.createElement('p', { className: "text-slate-600 dark:text-slate-400" }, "Корпоративная экосистема")
-                    ),
-                    React.createElement('form', { onSubmit: handleSubmit, className: "space-y-6" },
-                        React.createElement('div', null,
-                            React.createElement('label', { className: "block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2" }, "Логин"),
-                            React.createElement('input', {
-                                type: "text",
-                                value: login,
-                                onChange: (e) => setLogin(e.target.value),
-                                className: "w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all",
-                                placeholder: "Введите логин",
-                                required: true
-                            })
-                        ),
-                        React.createElement('div', null,
-                            React.createElement('label', { className: "block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2" }, "Пароль"),
-                            React.createElement('input', {
-                                type: "password",
-                                value: password,
-                                onChange: (e) => setPassword(e.target.value),
-                                className: "w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all",
-                                placeholder: "Введите пароль",
-                                required: true
-                            })
-                        ),
-                        error && React.createElement('div', { className: "text-red-500 text-sm text-center" }, error),
-                        React.createElement('button', {
-                            type: "submit",
-                            className: "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-all"
-                        }, "Войти")
-                    ),
-                    React.createElement('div', { className: "mt-6 text-center text-sm text-slate-600 dark:text-slate-400" },
-                        React.createElement('p', null, "Тестовые аккаунты:"),
-                        React.createElement('p', null, "admin / director / zam / engineer / energy / accountant"),
-                        React.createElement('p', null, "Пароль для всех: 123")
-                    )
-                )
-            );
-        };
-
-        const Dashboard = ({ user, theme, toggleTheme, onLogout }) => {
-            return React.createElement('div', { className: "min-h-screen bg-slate-50 dark:bg-slate-950" },
-                React.createElement('header', { className: "bg-white dark:bg-slate-900 shadow-sm border-b border-slate-200 dark:border-slate-800" },
-                    React.createElement('div', { className: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" },
-                        React.createElement('div', { className: "flex justify-between items-center py-4" },
-                            React.createElement('div', { className: "flex items-center" },
-                                React.createElement('h1', { className: "text-2xl font-bold text-slate-900 dark:text-white" }, "РК-ГРАНД"),
-                                React.createElement('span', { className: "ml-4 text-sm text-slate-600 dark:text-slate-400" }, `Добро пожаловать, ${user.name}`)
-                            ),
-                            React.createElement('div', { className: "flex items-center space-x-4" },
-                                React.createElement('button', {
-                                    onClick: toggleTheme,
-                                    className: "p-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                                }, theme === 'light' ? React.createElement(Moon, { size: 20 }) : React.createElement(Sun, { size: 20 })),
-                                React.createElement('button', {
-                                    onClick: onLogout,
-                                    className: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-all"
-                                }, "Выйти")
-                            )
-                        )
-                    )
-                ),
-                React.createElement('main', { className: "max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8" },
-                    React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" },
-                        React.createElement('div', { className: "bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800" },
-                            React.createElement('h3', { className: "text-lg font-semibold text-slate-900 dark:text-white mb-2" }, "Задачи"),
-                            React.createElement('p', { className: "text-slate-600 dark:text-slate-400" }, "Управление задачами и проектами")
-                        ),
-                        React.createElement('div', { className: "bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800" },
-                            React.createElement('h3', { className: "text-lg font-semibold text-slate-900 dark:text-white mb-2" }, "Сотрудники"),
-                            React.createElement('p', { className: "text-slate-600 dark:text-slate-400" }, "Управление персоналом")
-                        ),
-                        React.createElement('div', { className: "bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800" },
-                            React.createElement('h3', { className: "text-lg font-semibold text-slate-900 dark:text-white mb-2" }, "Аналитика"),
-                            React.createElement('p', { className: "text-slate-600 dark:text-slate-400" }, "Отчеты и статистика")
-                        )
-                    )
-                )
-            );
-        };
-
-        const root = createRoot(document.getElementById('root'));
-        root.render(React.createElement(App));
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            document.querySelector('.bg-gray-100').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('login').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('error').classList.add('hidden');
+        });
     </script>
 </body>
 </html>
