@@ -4,7 +4,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://<USERNAME>.github.io/rk-grand-ecosystem",
+  "homepage": "https://pnext5524-creator.github.io/RK-Grand",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

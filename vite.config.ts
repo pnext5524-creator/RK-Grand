@@ -6,9 +6,8 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   return {
-    // ВАЖНО: Замените '/rk-grand-ecosystem/' на название вашего репозитория,
-    // если оно отличается. Например: '/my-project/'
-    base: '/rk-grand-ecosystem/',
+    // ВАЖНО: Base должен совпадать с названием репозитория
+    base: '/RK-Grand/',
     plugins: [react()],
     build: {
       outDir: 'dist',
