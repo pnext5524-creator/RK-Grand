@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>РК-ГРАНД Экосистема</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script>
-      // Initialize theme early to avoid flickering
       const theme = localStorage.getItem('theme') || 'light';
       if (theme === 'dark') {
         document.documentElement.classList.add('dark');
       }
       
-      // Tailwind Config for transitions
       tailwind.config = {
         darkMode: 'class',
         theme: {
@@ -51,13 +53,11 @@
             background: rgba(15, 23, 42, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        /* Custom scrollbar for dark mode */
         .dark ::-webkit-scrollbar { width: 8px; }
         .dark ::-webkit-scrollbar-track { background: #0f172a; }
         .dark ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
         .dark ::-webkit-scrollbar-thumb:hover { background: #334155; }
         
-        /* Organic Gradient Mesh for Landing */
         .mesh-gradient-bg {
           background-color: #0f172a;
           background-image: 
@@ -74,6 +74,229 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
     <div id="root"></div>
-    <script type="module" src="./index.tsx"></script>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { createRoot } = ReactDOM;
+        const { User, Settings, BarChart3, Users, Clock, CheckSquare, MessageCircle, Sun, Moon, Menu, Bell } = lucide;
+
+        // Простая версия приложения для GitHub Pages
+        const App = () => {
+            const [theme, setTheme] = useState(() => 
+                localStorage.getItem('theme') || 'light'
+            );
+            const [isLoggedIn, setIsLoggedIn] = useState(false);
+            const [currentUser, setCurrentUser] = useState(null);
+
+            useEffect(() => {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+                localStorage.setItem('theme', theme);
+            }, [theme]);
+
+            const toggleTheme = () => {
+                setTheme(prev => prev === 'light' ? 'dark' : 'light');
+            };
+
+            const handleLogin = (login, password) => {
+                // Простая проверка логина
+                const users = {
+                    'admin': { name: 'Администратор', role: 'admin' },
+                    'director': { name: 'Малышев Константин Сергеевич', role: 'director' },
+                    'zam': { name: 'Морозов Артем Викторович', role: 'manager' },
+                    'engineer': { name: 'Волков Сергей Александрович', role: 'engineer' },
+                    'energy': { name: 'Зайцев Николай Михайлович', role: 'engineer' },
+                    'accountant': { name: 'Лебедева Елена Николаевна', role: 'accountant' }
+                };
+
+                if (users[login] && password === '123') {
+                    setCurrentUser({ login, ...users[login] });
+                    setIsLoggedIn(true);
+                    return true;
+                }
+                return false;
+            };
+
+            if (!isLoggedIn) {
+                return <LoginPage onLogin={handleLogin} theme={theme} toggleTheme={toggleTheme} />;
+            }
+
+            return <Dashboard user={currentUser} theme={theme} toggleTheme={toggleTheme} onLogout={() => setIsLoggedIn(false)} />;
+        };
+
+        const LoginPage = ({ onLogin, theme, toggleTheme }) => {
+            const [login, setLogin] = useState('');
+            const [password, setPassword] = useState('');
+            const [error, setError] = useState('');
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (onLogin(login, password)) {
+                    setError('');
+                } else {
+                    setError('Неверный логин или пароль');
+                }
+            };
+
+            return (
+                <div className="min-h-screen mesh-gradient-bg flex items-center justify-center p-4">
+                    <div className="absolute top-6 right-6">
+                        <button 
+                            onClick={toggleTheme}
+                            className="p-3 text-white/70 hover:text-white hover:bg-white/10 rounded-2xl transition-all"
+                        >
+                            {theme === 'light' ? React.createElement(Moon, { size: 24 }) : React.createElement(Sun, { size: 24 })}
+                        </button>
+                    </div>
+
+                    <div className="glass-panel rounded-3xl p-8 w-full max-w-md">
+                        <div className="text-center mb-8">
+                            <h1 className="text-3xl font-black text-slate-900 dark:text-white mb-2">РК-ГРАНД</h1>
+                            <p className="text-slate-600 dark:text-slate-400">Корпоративная экосистема</p>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                                    Логин
+                                </label>
+                                <input
+                                    type="text"
+                                    value={login}
+                                    onChange={(e) => setLogin(e.target.value)}
+                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    placeholder="Введите логин"
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                                    Пароль
+                                </label>
+                                <input
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    placeholder="Введите пароль"
+                                    required
+                                />
+                            </div>
+
+                            {error && (
+                                <div className="text-red-500 text-sm text-center">{error}</div>
+                            )}
+
+                            <button
+                                type="submit"
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-all"
+                            >
+                                Войти
+                            </button>
+                        </form>
+
+                        <div className="mt-6 text-center text-xs text-slate-500 dark:text-slate-400">
+                            <p>Тестовые аккаунты:</p>
+                            <p>admin/123, director/123, zam/123</p>
+                            <p>engineer/123, energy/123, accountant/123</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const Dashboard = ({ user, theme, toggleTheme, onLogout }) => {
+            const [activeModule, setActiveModule] = useState('dashboard');
+
+            const modules = [
+                { id: 'dashboard', name: 'Дашборд', icon: BarChart3 },
+                { id: 'hr', name: 'HR', icon: Users },
+                { id: 'engineering', name: 'Инжиниринг', icon: Settings },
+                { id: 'time', name: 'Учет времени', icon: Clock },
+                { id: 'tasks', name: 'Задачи', icon: CheckSquare },
+                { id: 'chat', name: 'Чат', icon: MessageCircle },
+            ];
+
+            return (
+                <div className="flex h-screen bg-slate-50 dark:bg-slate-950">
+                    {/* Sidebar */}
+                    <div className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800">
+                        <div className="p-6">
+                            <h2 className="text-xl font-black text-slate-900 dark:text-white">РК-ГРАНД</h2>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{user.name}</p>
+                        </div>
+
+                        <nav className="px-4 space-y-2">
+                            {modules.map(module => (
+                                <button
+                                    key={module.id}
+                                    onClick={() => setActiveModule(module.id)}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all ${
+                                        activeModule === module.id
+                                            ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
+                                    }`}
+                                >
+                                    {React.createElement(module.icon, { size: 20 })}
+                                    <span className="font-medium">{module.name}</span>
+                                </button>
+                            ))}
+                        </nav>
+
+                        <div className="absolute bottom-4 left-4 right-4">
+                            <button
+                                onClick={onLogout}
+                                className="w-full px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl transition-all text-left"
+                            >
+                                Выйти
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Main Content */}
+                    <div className="flex-1 flex flex-col">
+                        <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6">
+                            <h1 className="text-lg font-bold text-slate-900 dark:text-white">
+                                {modules.find(m => m.id === activeModule)?.name}
+                            </h1>
+                            <button 
+                                onClick={toggleTheme}
+                                className="p-2 text-slate-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 rounded-xl transition-all"
+                            >
+                                {theme === 'light' ? React.createElement(Moon, { size: 20 }) : React.createElement(Sun, { size: 20 })}
+                            </button>
+                        </header>
+
+                        <main className="flex-1 p-6">
+                            <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 h-full border border-slate-200 dark:border-slate-800">
+                                <div className="text-center">
+                                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+                                        {modules.find(m => m.id === activeModule)?.name}
+                                    </h2>
+                                    <p className="text-slate-600 dark:text-slate-400">
+                                        Добро пожаловать в модуль {modules.find(m => m.id === activeModule)?.name.toLowerCase()}!
+                                    </p>
+                                    <div className="mt-8 p-6 bg-slate-50 dark:bg-slate-800 rounded-xl">
+                                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                                            Это демо-версия системы РК-ГРАНД для GitHub Pages.
+                                            Полная функциональность доступна в основной версии приложения.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            );
+        };
+
+        // Запуск приложения
+        const root = createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
+    </script>
 </body>
 </html>

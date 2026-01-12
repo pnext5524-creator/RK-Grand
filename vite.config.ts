@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
-    base: '/RK-Grand/', // GitHub Pages repository name
+    base: '/RK-Grand/',
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
