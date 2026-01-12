@@ -89,21 +89,6 @@ const TEST_USERS: User[] = [
       [ModuleType.TASKS]: false,
       [ModuleType.CHAT]: true,
     }
-  },
-  {
-    id: 'emp-006',
-    login: 'rsc',
-    password: '123',
-    fullName: 'Минигулов Александр Равильевич',
-    role: 'USER',
-    permissions: {
-      [ModuleType.DASHBOARD]: true,
-      [ModuleType.HR]: false,
-      [ModuleType.ENGINEERING]: true,
-      [ModuleType.TIME_TRACKING]: true,
-      [ModuleType.TASKS]: true,
-      [ModuleType.CHAT]: true,
-    }
   }
 ];
 
