@@ -1,6 +1,8 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { Contractor, AIPrediction, Task, TaskAIAnalysis, ContractDocument, AIDocumentAnalysis, ChatMessage, ChatAttachment } from "../types";
+
+// Declare process to satisfy TypeScript compiler during build (since it's a Node global, not browser)
+declare const process: any;
 
 const SYSTEM_INSTRUCTION = `
   Вы — RK-GrandGPT, продвинутый искусственный интеллект, созданный специально для сотрудников целлюлозного завода ООО «РК-ГРАНД».
